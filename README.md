@@ -1,6 +1,8 @@
 # Golang Web Euler Test
 
 Learning golang by implementing net/http, project euler, and asserts/testing.
+
+Also tests git branching/rebasing.
  
 ## References
 
