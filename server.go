@@ -12,10 +12,12 @@
 package main
 
 import (
+ 	"fmt"
 	"html/template"
 	"io/ioutil"
 	"net/http"
 	"regexp"
+	"encoding/json"
 )
 
 type Page struct {
@@ -95,10 +97,31 @@ func makeHandler(fn func (http.ResponseWriter, *http.Request, string)) http.Hand
 	}
 }
 
+type Player struct {  // NBA player
+	Name string
+	Team string
+	Position string
+}
+
+// see http://nesv.blogspot.com/2012/09/super-easy-json-http-responses-in-go.html
+func jsonHandler(w http.ResponseWriter, r *http.Request) {
+	dirk := Player{"Dirk Nowitzki", "Dallas Mavericks", "F"}
+	vince := Player{"Vince Carter", "Dallas Mavericks", "F"}
+	mavericks := []Player{dirk, vince}  // slice of player structs
+	mavs, err := json.Marshal(mavericks)  // convert slice to json
+	if err != nil {
+		http.NotFound(w, r)
+	    return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, string(mavs))
+}
+
 func main() {
 	http.HandleFunc("/", makeHandler(viewHandler))
 	http.HandleFunc("/view/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
+	http.HandleFunc("/mavericks/", jsonHandler)  // trying out json
 	http.ListenAndServe(":8080", nil)
 }
