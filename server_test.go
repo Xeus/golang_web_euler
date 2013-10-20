@@ -69,6 +69,11 @@ func Test_GetMaxNum(t *testing.T) {
 	testMaxNum2, err := getMaxNum(testStr2, euler.PROBLEM1_DEFAULT)
 	assert.Nil(err)
 	assert.Equal(100, testMaxNum2)
+
+	testStr3 := eulerPath.FindStringSubmatch("/euler/1/-100")
+	testMaxNum3, err := getMaxNum(testStr3, euler.PROBLEM1_DEFAULT)
+	assert.Nil(err)
+	assert.Equal(-100, testMaxNum3)
 }
 
 func Test_Problem1(t *testing.T) {
