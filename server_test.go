@@ -2,7 +2,7 @@
  * see http://golangtutorials.blogspot.com/2011/10/gotest-unit-testing-and-benchmarking-go.html
  */
 
-package main
+package server
 
 import(
  	"testing"

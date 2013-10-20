@@ -6,7 +6,7 @@
 package euler
 
 import (
-	"fmt"
+	// "fmt"
 )
 
 const (
@@ -23,8 +23,4 @@ func Problem1(maxnum int) (int) {
 		}
 	}
 	return sum
-}
-
-func main() {
-	fmt.Println(Problem1(10))
 }

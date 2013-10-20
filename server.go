@@ -9,7 +9,7 @@
  * https://github.com/JanLaussmann/Project-Euler-Golang
  */
 
-package main
+package server
 
 import (
  	"fmt"
