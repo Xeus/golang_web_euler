@@ -119,7 +119,7 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(mavs))
 }
 
-var eulerPath = regexp.MustCompile("^/euler/([0-9]+)[/]*([0-9]*)[/]*")
+var eulerPath = regexp.MustCompile("^/euler/([0-9]+)[/]*([-0-9]*)[/]*")
 
 type EulerResult struct {
 	ProblemNum int
