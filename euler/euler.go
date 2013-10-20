@@ -4,6 +4,12 @@ import (
 	"fmt"
 )
 
+const (
+	PROBLEM1_DEFAULT = 10
+	PROBLEM2_DEFAULT = 10
+)
+	
+
 func Problem1(maxnum int) (int) {
 	sum := 0
 	for i := 0; i < maxnum; i++ {

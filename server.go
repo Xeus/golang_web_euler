@@ -119,11 +119,31 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(mavs))
 }
 
-var eulerPath = regexp.MustCompile("^/euler/([0-9]+)[/]*([0-9]*)[/]*$")
+var eulerPath = regexp.MustCompile("^/euler/([0-9]+)[/]*([0-9]*)[/]*")
 
 type EulerResult struct {
 	ProblemNum int
 	Result int
+}
+
+/**
+ * Project Euler problems usually give you an upper-bound or
+ * some variable.  This extracts it from the URL:
+ * /euler/1/100/ : For problem #1, uses 100 as the maxNum.
+ */
+func getMaxNum(url []string, defaultVal int) (maxNum int, err error) {
+	userMaxNum := 0
+	if url[2] != "" {
+		userMaxNum, err = strconv.Atoi(url[2])
+		if err != nil {
+	    	return
+		}
+	} else {
+		userMaxNum = defaultVal
+	}
+	maxNum = userMaxNum
+
+	return maxNum, err
 }
 
 func eulerHandler(w http.ResponseWriter, r *http.Request) {
@@ -141,25 +161,19 @@ func eulerHandler(w http.ResponseWriter, r *http.Request) {
     	return
 	}
 
-	maxNum := 10
-	if m[2] != "" {
-		userMaxNum, err := strconv.Atoi(m[2])
-		if err != nil {
-			http.NotFound(w, r)
-	    	return
-		}
-		maxNum = userMaxNum
-	} else {
-		maxNum = 10
-	}
-
 	switch problemNum {
 	case 1:
+		maxNum, err := getMaxNum(m, 10)
+		if err != nil {
+			http.NotFound(w, r)
+		    return
+		}
 		result = euler.Problem1(maxNum)
 		break
 	default:
 		result = euler.Problem1(10)
 	}
+
 	eulerResult := EulerResult{problemNum, result}
 	
 	answer, err := json.Marshal(eulerResult)  // convert slice to json

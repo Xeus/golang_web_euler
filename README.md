@@ -3,7 +3,18 @@
 Learning golang by implementing net/http, project euler, and asserts/testing.
 
 Also tests git branching/rebasing.
- 
+
+## Routes
+
+* http://localhost:8080/euler/[problem #]/
+* http://localhost:8080/euler/[problem #]/[variable num from problem, e.g. 1000 from #1]/
+
+## Tests
+
+Uses asserts as well.
+
+`go test` to run tests from the `golang_web_euler` directory.
+
 ## References
 
 See:
