@@ -13,11 +13,13 @@ package main
 
 import (
  	"fmt"
+ 	"strconv"
 	"html/template"
 	"io/ioutil"
 	"net/http"
 	"regexp"
 	"encoding/json"
+	"./euler"
 )
 
 type Page struct {
@@ -117,11 +119,64 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(mavs))
 }
 
+var eulerPath = regexp.MustCompile("^/euler/([0-9]+)[/]*([0-9]*)[/]*$")
+
+type EulerResult struct {
+	ProblemNum int
+	Result int
+}
+
+func eulerHandler(w http.ResponseWriter, r *http.Request) {
+	result := 0
+
+	m := eulerPath.FindStringSubmatch(r.URL.Path)
+    if m == nil {
+        http.NotFound(w, r)
+        return
+    }
+
+	problemNum, err := strconv.Atoi(m[1])
+	if err != nil {
+		http.NotFound(w, r)
+    	return
+	}
+
+	maxNum := 10
+	if m[2] != "" {
+		userMaxNum, err := strconv.Atoi(m[2])
+		if err != nil {
+			http.NotFound(w, r)
+	    	return
+		}
+		maxNum = userMaxNum
+	} else {
+		maxNum = 10
+	}
+
+	switch problemNum {
+	case 1:
+		result = euler.Problem1(maxNum)
+		break
+	default:
+		result = euler.Problem1(10)
+	}
+	eulerResult := EulerResult{problemNum, result}
+	
+	answer, err := json.Marshal(eulerResult)  // convert slice to json
+	if err != nil {
+		http.NotFound(w, r)
+	    return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, string(answer))
+}
+
 func main() {
 	http.HandleFunc("/", makeHandler(viewHandler))
 	http.HandleFunc("/view/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
 	http.HandleFunc("/mavericks/", jsonHandler)  // trying out json
+	http.HandleFunc("/euler/", eulerHandler)
 	http.ListenAndServe(":8080", nil)
 }
