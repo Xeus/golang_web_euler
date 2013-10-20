@@ -1,3 +1,8 @@
+/**
+ * asserts courtesy of @coocood at github
+ * https://github.com/coocood/assrt
+ */
+
 package assrt
 
 import (

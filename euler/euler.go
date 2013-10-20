@@ -1,3 +1,8 @@
+/**
+ * Solutions to Project Euler problem set
+ * http://projecteuler.net/problems
+ */
+
 package euler
 
 import (

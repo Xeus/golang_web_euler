@@ -22,3 +22,4 @@ See:
 * http://golangtutorials.blogspot.com/2011/10/gotest-unit-testing-and-benchmarking-go.html
 * https://github.com/coocood/assrt
 * https://github.com/eddie/goalg
+* http://projecteuler.net/problems
