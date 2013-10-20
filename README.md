@@ -4,10 +4,18 @@ Learning golang by implementing net/http, project euler, and asserts/testing.
 
 Also tests git branching/rebasing.
 
-## Routes
+## Server
 
-* http://localhost:8080/euler/[problem #]/
-* http://localhost:8080/euler/[problem #]/[variable num from problem, e.g. 1000 from #1]/
+* `go build server.go`
+* `go run server.go`
+* Go to `http://localhost:8080/euler/` in a browser.
+
+### Routes
+
+* `http://localhost:8080/`
+* `http://localhost:8080/view/test`
+* `http://localhost:8080/euler/[problem #]/`
+* `http://localhost:8080/euler/[problem #]/[variable num from problem, e.g. 1000 from #1]/`
 
 ## Tests
 
