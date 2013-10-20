@@ -6,6 +6,7 @@
 package euler
 
 import (
+ 	"time"
 	// "fmt"
 )
 
@@ -15,12 +16,14 @@ const (
 )
 	
 
-func Problem1(maxnum int) (int) {
-	sum := 0
-	for i := 0; i < maxnum; i++ {
+func Problem1(maxnum int64) (int64, float64) {
+	var i, sum int64
+	start := time.Now()
+	sum = 0
+	for i = 0; i < maxnum; i++ {
 		if i % 3 == 0 || i % 5 == 0 {
 			sum += i
 		}
 	}
-	return sum
+	return sum, time.Since(start).Seconds()
 }

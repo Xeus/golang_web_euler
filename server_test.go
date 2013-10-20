@@ -2,7 +2,7 @@
  * see http://golangtutorials.blogspot.com/2011/10/gotest-unit-testing-and-benchmarking-go.html
  */
 
-package server
+package main
 
 import(
  	"testing"
@@ -73,9 +73,22 @@ func Test_GetMaxNum(t *testing.T) {
 
 func Test_Problem1(t *testing.T) {
 	assert := assrt.NewAssert(t)
+	var solution int64
+	var since float64
 
-	assert.Equal(23, euler.Problem1(10))
-	assert.Equal(233168, euler.Problem1(1000))
-	assert.Equal(0, euler.Problem1(0))
-	assert.Equal(0, euler.Problem1(-1))
+	solution, since = euler.Problem1(10)
+	assert.Equal(23, solution)
+	assert.Equal(true, since >= 0)
+
+	solution, since = euler.Problem1(1000)
+	assert.Equal(233168, solution)
+	assert.Equal(true, since >= 0)
+
+	solution, since = euler.Problem1(0)
+	assert.Equal(0, solution)
+	assert.Equal(true, since >= 0)
+
+	solution, since = euler.Problem1(-1)
+	assert.Equal(0, solution)
+	assert.Equal(true, since >= 0)
 }

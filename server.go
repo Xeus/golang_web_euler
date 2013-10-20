@@ -9,7 +9,7 @@
  * https://github.com/JanLaussmann/Project-Euler-Golang
  */
 
-package server
+package main
 
 import (
  	"fmt"
@@ -123,7 +123,9 @@ var eulerPath = regexp.MustCompile("^/euler/([0-9]+)[/]*([0-9]*)[/]*")
 
 type EulerResult struct {
 	ProblemNum int
-	Result int
+	MaxNum int64
+	Result int64
+	Duration string
 }
 
 /**
@@ -131,10 +133,13 @@ type EulerResult struct {
  * some variable.  This extracts it from the URL:
  * /euler/1/100/ : For problem #1, uses 100 as the maxNum.
  */
-func getMaxNum(url []string, defaultVal int) (maxNum int, err error) {
-	userMaxNum := 0
+func getMaxNum(url []string, defaultVal int64) (maxNum int64, err error) {
+	var userMaxNum int64
+	tmp := 0
+	userMaxNum = 0
 	if url[2] != "" {
-		userMaxNum, err = strconv.Atoi(url[2])
+		tmp, err = strconv.Atoi(url[2])
+		userMaxNum = int64(tmp)
 		if err != nil {
 	    	return
 		}
@@ -147,7 +152,10 @@ func getMaxNum(url []string, defaultVal int) (maxNum int, err error) {
 }
 
 func eulerHandler(w http.ResponseWriter, r *http.Request) {
-	result := 0
+	var result, maxNum int64
+	var err error
+	var since float64
+	result = 0
 
 	m := eulerPath.FindStringSubmatch(r.URL.Path)
     if m == nil {
@@ -163,18 +171,21 @@ func eulerHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch problemNum {
 	case 1:
-		maxNum, err := getMaxNum(m, 10)
+		maxNum, err = getMaxNum(m, 10)
 		if err != nil {
 			http.NotFound(w, r)
 		    return
 		}
-		result = euler.Problem1(maxNum)
+		result, since = euler.Problem1(maxNum)
 		break
 	default:
-		result = euler.Problem1(10)
+		http.NotFound(w, r)
+		return
 	}
 
-	eulerResult := EulerResult{problemNum, result}
+	sinceStr := strconv.FormatFloat(since, 'f', 2, 64) + "s"
+
+	eulerResult := EulerResult{problemNum, maxNum, result, sinceStr}
 	
 	answer, err := json.Marshal(eulerResult)  // convert slice to json
 	if err != nil {
