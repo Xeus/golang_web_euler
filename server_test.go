@@ -87,13 +87,27 @@ func Test_Problem1(t *testing.T) {
 
 	solution, since = euler.Problem1(1000)
 	assert.Equal(233168, solution)
-	assert.Equal(true, since >= 0)
 
 	solution, since = euler.Problem1(0)
 	assert.Equal(0, solution)
-	assert.Equal(true, since >= 0)
 
 	solution, since = euler.Problem1(-1)
 	assert.Equal(0, solution)
-	assert.Equal(true, since >= 0)
 }
+
+func Test_Problem2(t *testing.T) {
+	assert := assrt.NewAssert(t)
+	var solution int64
+	var since float64
+
+	solution, since = euler.Problem2(5)
+	assert.Equal(2, solution)
+	assert.Equal(true, since >= 0)
+
+	solution, since = euler.Problem2(4000000)
+	assert.Equal(4613732, solution)
+
+	solution, since = euler.Problem2(-5)
+	assert.Equal(0, solution)
+}
+

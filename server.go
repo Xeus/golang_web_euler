@@ -178,6 +178,14 @@ func eulerHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		result, since = euler.Problem1(maxNum)
 		break
+	case 2:
+		maxNum, err = getMaxNum(m, 5)
+		if err != nil {
+			http.NotFound(w, r)
+		    return
+		}
+		result, since = euler.Problem2(maxNum)
+		break
 	default:
 		http.NotFound(w, r)
 		return
