@@ -8,7 +8,7 @@ Also tests git branching/rebasing.
 
 * `go build server.go`
 * `go run server.go`
-* Go to `http://localhost:8080/euler/` in a browser.
+* Go to `http://localhost:8080/euler/1` in a browser.
 
 ### Routes
 
