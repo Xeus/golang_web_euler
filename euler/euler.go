@@ -7,12 +7,13 @@ package euler
 
 import (
  	"time"
-	// "fmt"
+ 	"errors"
 )
 
 const (
 	PROBLEM1_DEFAULT = 10
 	PROBLEM2_DEFAULT = 5
+	PROBLEM3_DEFAULT = 600851475143
 )
 
 // sum of numbers less than 1000 divisible by 3 or 5
@@ -66,4 +67,19 @@ func Problem2Alt(maxNum int64) (int64, float64) {
 		oldSequence = tmp
 	}
 	return sum, time.Since(start).Seconds()
+}
+
+// largest prime factor of number 600851475143
+func Problem3(maxNum int64) (int64, float64, error) {
+	var i int64
+	start := time.Now()
+	if maxNum < 0 {
+		return maxNum, time.Since(start).Seconds(), errors.New("negative number")
+	}
+	for i=2; i * i <= maxNum; i++ {
+		for maxNum % i == 0 {
+			maxNum = maxNum / i
+		}
+	}
+	return maxNum, time.Since(start).Seconds(), nil
 }

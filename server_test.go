@@ -81,7 +81,7 @@ func Test_Problem1(t *testing.T) {
 	var solution int64
 	var since float64
 
-	solution, since = euler.Problem1(10)
+	solution, since = euler.Problem1(euler.PROBLEM1_DEFAULT)
 	assert.Equal(23, solution)
 	assert.Equal(true, since >= 0)
 
@@ -100,7 +100,7 @@ func Test_Problem2(t *testing.T) {
 	var solution int64
 	var since float64
 
-	solution, since = euler.Problem2(5)
+	solution, since = euler.Problem2(euler.PROBLEM2_DEFAULT)
 	assert.Equal(2, solution)
 	assert.Equal(true, since >= 0)
 
@@ -111,3 +111,19 @@ func Test_Problem2(t *testing.T) {
 	assert.Equal(0, solution)
 }
 
+func Test_Problem3(t *testing.T) {
+	assert := assrt.NewAssert(t)
+	var solution int64
+	var since float64
+	var err error
+
+	solution, since, err = euler.Problem3(euler.PROBLEM3_DEFAULT)
+	assert.Equal(6857, solution)
+	assert.Equal(true, since >= 0)
+
+	solution, since, err = euler.Problem3(400000003)
+	assert.Equal(17257, solution)
+
+	solution, since, err = euler.Problem3(-10)
+	assert.NotNil(err)
+}

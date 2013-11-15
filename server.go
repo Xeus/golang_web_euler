@@ -122,10 +122,11 @@ func jsonHandler(w http.ResponseWriter, r *http.Request) {
 var eulerPath = regexp.MustCompile("^/euler/([0-9]+)[/]*([-0-9]*)[/]*")
 
 type EulerResult struct {
-	ProblemNum int
-	MaxNum int64
-	Result int64
-	Duration string
+	ProblemNum int `json:"problem_num"`
+	MaxNum int64 `json:"max_num"`
+	Result int64 `json:"result"`
+	Duration string `json:"duration"`
+	ErrorMsg string `json:"error_msg"`
 }
 
 /**
@@ -171,7 +172,7 @@ func eulerHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch problemNum {
 	case 1:
-		maxNum, err = getMaxNum(m, 10)
+		maxNum, err = getMaxNum(m, euler.PROBLEM1_DEFAULT)
 		if err != nil {
 			http.NotFound(w, r)
 		    return
@@ -179,13 +180,20 @@ func eulerHandler(w http.ResponseWriter, r *http.Request) {
 		result, since = euler.Problem1(maxNum)
 		break
 	case 2:
-		maxNum, err = getMaxNum(m, 5)
+		maxNum, err = getMaxNum(m, euler.PROBLEM2_DEFAULT)
 		if err != nil {
 			http.NotFound(w, r)
 		    return
 		}
 		result, since = euler.Problem2(maxNum)
 		break
+	case 3:
+		maxNum, err = getMaxNum(m, euler.PROBLEM3_DEFAULT)
+		if err != nil {
+			http.NotFound(w, r)
+			return
+		}
+		result, since, err = euler.Problem3(maxNum)
 	default:
 		http.NotFound(w, r)
 		return
@@ -193,7 +201,13 @@ func eulerHandler(w http.ResponseWriter, r *http.Request) {
 
 	sinceStr := strconv.FormatFloat(since, 'f', 2, 64) + "s"
 
-	eulerResult := EulerResult{problemNum, maxNum, result, sinceStr}
+	var msg string
+	if err == nil {
+		msg = ""
+	} else {
+		msg = err.Error()
+	}
+	eulerResult := EulerResult{problemNum, maxNum, result, sinceStr, msg}
 	
 	answer, err := json.Marshal(eulerResult)  // convert slice to json
 	if err != nil {
@@ -212,4 +226,5 @@ func main() {
 	http.HandleFunc("/mavericks/", jsonHandler)  // trying out json
 	http.HandleFunc("/euler/", eulerHandler)
 	http.ListenAndServe(":8080", nil)
+	fmt.Println("Listening on port 8080...")
 }
