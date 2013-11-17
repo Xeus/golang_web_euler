@@ -224,6 +224,6 @@ func main() {
 	http.HandleFunc("/save/", makeHandler(saveHandler))
 	http.HandleFunc("/mavericks/", jsonHandler)  // trying out json
 	http.HandleFunc("/euler/", eulerHandler)
-	http.ListenAndServe(":8080", nil)
 	fmt.Println("Listening on port 8080...")
+	http.ListenAndServe(":8080", nil)
 }

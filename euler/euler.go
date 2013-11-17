@@ -6,6 +6,7 @@
 package euler
 
 import (
+ 	// "fmt"
  	"strconv"
  	"time"
  	"errors"
@@ -86,8 +87,8 @@ func Problem3(maxNum int64) (string, int64, float64, error) {
 	return desc, maxNum, time.Since(start).Seconds(), nil
 }
 
-func isPalindrome(product int) (bool) {
-	stringify := strconv.Itoa(int(product))
+func isPalindrome(product int64) (bool) {
+	stringify := strconv.FormatInt(product, 10)
 	strLen := len(stringify)
 	halfWord := int(math.Floor(float64(strLen / 2)))
 	for j := 0; j < halfWord; j++ {
@@ -118,7 +119,7 @@ func Problem4(maxNum int64) (string, int64, float64, error) {
 			if product < highestProduct {
 				break
 			}
-			if (isPalindrome(int(product)) == true && product > highestProduct) {
+			if (isPalindrome(product) == true && product > highestProduct) {
 				highestProduct = product
 			}
 		}
