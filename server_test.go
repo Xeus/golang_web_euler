@@ -140,4 +140,7 @@ func Test_Problem4(t *testing.T) {
 
 	desc, solution, since, err = euler.Problem4(10)
 	assert.NotNil(err)
+
+	desc, solution, since, err = euler.Problem4(10000000)
+	assert.NotNil(err)
 }

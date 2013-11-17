@@ -111,6 +111,8 @@ func Problem4(maxNum int64) (string, int64, float64, error) {
 		return desc, maxNum, time.Since(start).Seconds(), errors.New("negative number")
 	} else if maxNum <= 10 {
 		return desc, maxNum, time.Since(start).Seconds(), errors.New("number is too low")
+	} else if maxNum > 9999999 {
+		return desc, maxNum, time.Since(start).Seconds(), errors.New("number will take too long to compute")
 	}
 
 	for h := maxNum; h >= 0; h-- {
