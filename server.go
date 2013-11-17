@@ -123,6 +123,7 @@ var eulerPath = regexp.MustCompile("^/euler/([0-9]+)[/]*([-0-9]*)[/]*")
 
 type EulerResult struct {
 	ProblemNum int `json:"problem_num"`
+	Description string `json:"description"`
 	MaxNum int64 `json:"max_num"`
 	Result int64 `json:"result"`
 	Duration string `json:"duration"`
@@ -153,6 +154,7 @@ func getMaxNum(url []string, defaultVal int64) (maxNum int64, err error) {
 }
 
 func eulerHandler(w http.ResponseWriter, r *http.Request) {
+	var desc string
 	var result, maxNum int64
 	var err error
 	var since float64
@@ -170,30 +172,27 @@ func eulerHandler(w http.ResponseWriter, r *http.Request) {
     	return
 	}
 
+	eulerDefaults := euler.ProblemDefaults()
+
+	maxNum, err = getMaxNum(m, eulerDefaults[problemNum])
+	if err != nil {
+		http.NotFound(w, r)
+	    return
+	}
+
 	switch problemNum {
 	case 1:
-		maxNum, err = getMaxNum(m, euler.PROBLEM1_DEFAULT)
-		if err != nil {
-			http.NotFound(w, r)
-		    return
-		}
-		result, since = euler.Problem1(maxNum)
+		desc, result, since = euler.Problem1(maxNum)
 		break
 	case 2:
-		maxNum, err = getMaxNum(m, euler.PROBLEM2_DEFAULT)
-		if err != nil {
-			http.NotFound(w, r)
-		    return
-		}
-		result, since = euler.Problem2(maxNum)
+		desc, result, since = euler.Problem2(maxNum)
 		break
 	case 3:
-		maxNum, err = getMaxNum(m, euler.PROBLEM3_DEFAULT)
-		if err != nil {
-			http.NotFound(w, r)
-			return
-		}
-		result, since, err = euler.Problem3(maxNum)
+		desc, result, since, err = euler.Problem3(maxNum)
+		break
+	case 4:
+		desc, result, since, err = euler.Problem4(maxNum)
+		break
 	default:
 		http.NotFound(w, r)
 		return
@@ -207,7 +206,7 @@ func eulerHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		msg = err.Error()
 	}
-	eulerResult := EulerResult{problemNum, maxNum, result, sinceStr, msg}
+	eulerResult := EulerResult{problemNum, desc, maxNum, result, sinceStr, msg}
 	
 	answer, err := json.Marshal(eulerResult)  // convert slice to json
 	if err != nil {

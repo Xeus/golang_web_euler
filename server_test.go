@@ -61,69 +61,83 @@ func Test_GetMaxNum(t *testing.T) {
 	assert := assrt.NewAssert(t)
 
 	testStr1 := eulerPath.FindStringSubmatch("/euler/1")
-	testMaxNum1, err := getMaxNum(testStr1, euler.PROBLEM1_DEFAULT)
+	testMaxNum1, err := getMaxNum(testStr1, euler.ProblemDefaults()[1])
 	assert.Nil(err)
 	assert.Equal(10, testMaxNum1)
 
 	testStr2 := eulerPath.FindStringSubmatch("/euler/1/100")
-	testMaxNum2, err := getMaxNum(testStr2, euler.PROBLEM1_DEFAULT)
+	testMaxNum2, err := getMaxNum(testStr2, euler.ProblemDefaults()[1])
 	assert.Nil(err)
 	assert.Equal(100, testMaxNum2)
 
 	testStr3 := eulerPath.FindStringSubmatch("/euler/1/-100")
-	testMaxNum3, err := getMaxNum(testStr3, euler.PROBLEM1_DEFAULT)
+	testMaxNum3, err := getMaxNum(testStr3, euler.ProblemDefaults()[1])
 	assert.Nil(err)
 	assert.Equal(-100, testMaxNum3)
 }
 
 func Test_Problem1(t *testing.T) {
 	assert := assrt.NewAssert(t)
-	var solution int64
-	var since float64
 
-	solution, since = euler.Problem1(euler.PROBLEM1_DEFAULT)
+	var desc, solution, since = euler.Problem1(euler.ProblemDefaults()[1])
+	assert.PositiveLen(desc)
 	assert.Equal(23, solution)
 	assert.Equal(true, since >= 0)
 
-	solution, since = euler.Problem1(1000)
+	desc, solution, since = euler.Problem1(1000)
 	assert.Equal(233168, solution)
 
-	solution, since = euler.Problem1(0)
+	desc, solution, since = euler.Problem1(0)
 	assert.Equal(0, solution)
 
-	solution, since = euler.Problem1(-1)
+	desc, solution, since = euler.Problem1(-1)
 	assert.Equal(0, solution)
 }
 
 func Test_Problem2(t *testing.T) {
 	assert := assrt.NewAssert(t)
-	var solution int64
-	var since float64
 
-	solution, since = euler.Problem2(euler.PROBLEM2_DEFAULT)
+	var desc, solution, since = euler.Problem2(euler.ProblemDefaults()[2])
+	assert.PositiveLen(desc)
 	assert.Equal(2, solution)
 	assert.Equal(true, since >= 0)
 
-	solution, since = euler.Problem2(4000000)
+	desc, solution, since = euler.Problem2(4000000)
 	assert.Equal(4613732, solution)
 
-	solution, since = euler.Problem2(-5)
+	desc, solution, since = euler.Problem2(-5)
 	assert.Equal(0, solution)
 }
 
 func Test_Problem3(t *testing.T) {
 	assert := assrt.NewAssert(t)
-	var solution int64
-	var since float64
-	var err error
 
-	solution, since, err = euler.Problem3(euler.PROBLEM3_DEFAULT)
+	var desc, solution, since, err = euler.Problem3(euler.ProblemDefaults()[3])
+	assert.PositiveLen(desc)
 	assert.Equal(6857, solution)
 	assert.Equal(true, since >= 0)
 
-	solution, since, err = euler.Problem3(400000003)
+	desc, solution, since, err = euler.Problem3(400000003)
 	assert.Equal(17257, solution)
 
-	solution, since, err = euler.Problem3(-10)
+	desc, solution, since, err = euler.Problem3(-10)
+	assert.NotNil(err)
+}
+
+func Test_Problem4(t *testing.T) {
+	assert := assrt.NewAssert(t)
+
+	var desc, solution, since, err = euler.Problem4(euler.ProblemDefaults()[4])
+	assert.PositiveLen(desc)
+	assert.Equal(906609, solution)
+	assert.Equal(true, since >= 0)
+
+	desc, solution, since, err = euler.Problem4(99)
+	assert.Equal(9009, solution)
+
+	desc, solution, since, err = euler.Problem4(-10)
+	assert.NotNil(err)
+
+	desc, solution, since, err = euler.Problem4(3)
 	assert.NotNil(err)
 }

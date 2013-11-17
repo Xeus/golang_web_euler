@@ -6,18 +6,22 @@
 package euler
 
 import (
+ 	"strconv"
  	"time"
  	"errors"
+ 	"math"
 )
 
-const (
-	PROBLEM1_DEFAULT = 10
-	PROBLEM2_DEFAULT = 5
-	PROBLEM3_DEFAULT = 600851475143
-)
+func ProblemDefaults() (map[int]int64) {
+	return map[int]int64 {
+		1: 10,
+		2: 5,
+		3: 600851475143,
+		4: 999,
+	}
+}
 
-// sum of numbers less than 1000 divisible by 3 or 5
-func Problem1(maxNum int64) (int64, float64) {
+func Problem1(maxNum int64) (string, int64, float64) {
 	var i, sum int64
 	start := time.Now()
 	sum = 0
@@ -26,11 +30,10 @@ func Problem1(maxNum int64) (int64, float64) {
 			sum += i
 		}
 	}
-	return sum, time.Since(start).Seconds()
+	return "sum of numbers less than 1000 divisible by 3 or 5", sum, time.Since(start).Seconds()
 }
 
-// sum of fibonacci #s <= 4mil that are divisible by 2
-func Problem2(maxNum int64) (int64, float64) {
+func Problem2(maxNum int64) (string, int64, float64) {
 	var sum, sequence, oldSequence int64
 	start := time.Now()
 
@@ -45,11 +48,10 @@ func Problem2(maxNum int64) (int64, float64) {
 		}
 		sequence, oldSequence = oldSequence, sequence + oldSequence
 	}
-	return sum, time.Since(start).Seconds()
+	return "sum of fibonacci #s <= 4mil that are divisible by 2", sum, time.Since(start).Seconds()
 }
 
-// sum of fibonacci #s <= 4mil that are divisible by 2
-func Problem2Alt(maxNum int64) (int64, float64) {
+func Problem2Alt(maxNum int64) (string, int64, float64) {
 	var sum, sequence, oldSequence, tmp int64
 	start := time.Now()
 
@@ -66,20 +68,63 @@ func Problem2Alt(maxNum int64) (int64, float64) {
 		sequence += oldSequence
 		oldSequence = tmp
 	}
-	return sum, time.Since(start).Seconds()
+	return "sum of fibonacci #s <= 4mil that are divisible by 2", sum, time.Since(start).Seconds()
 }
 
-// largest prime factor of number 600851475143
-func Problem3(maxNum int64) (int64, float64, error) {
+func Problem3(maxNum int64) (string, int64, float64, error) {
 	var i int64
+	desc := "largest prime factor of number 600851475143"
 	start := time.Now()
 	if maxNum < 0 {
-		return maxNum, time.Since(start).Seconds(), errors.New("negative number")
+		return desc, maxNum, time.Since(start).Seconds(), errors.New("negative number")
 	}
 	for i=2; i * i <= maxNum; i++ {
 		for maxNum % i == 0 {
 			maxNum = maxNum / i
 		}
 	}
-	return maxNum, time.Since(start).Seconds(), nil
+	return desc, maxNum, time.Since(start).Seconds(), nil
+}
+
+func isPalindrome(product int) (bool) {
+	stringify := strconv.Itoa(int(product))
+	strLen := len(stringify)
+	halfWord := int(math.Floor(float64(strLen / 2)))
+	for j := 0; j < halfWord; j++ {
+		if (stringify[j] != stringify[strLen - j - 1]) {
+			return false
+		}
+	}
+	return true
+}
+
+func Problem4(maxNum int64) (string, int64, float64, error) {
+	var product int64
+	var highestProduct int64 = 0
+	
+	var desc string = "largest palindrome of product of 2 3-digit numbers"
+	start := time.Now()
+
+	// error checking
+	if maxNum < 0 {
+		return desc, maxNum, time.Since(start).Seconds(), errors.New("negative number")
+	} else if maxNum < 10 {
+		return desc, maxNum, time.Since(start).Seconds(), errors.New("number is too low")
+	}
+
+	for h := maxNum; h >= 0; h-- {
+		for i := maxNum; i >= 0; i-- {
+			product = h * i
+			if product < highestProduct {
+				break
+			}
+			if (isPalindrome(int(product)) == true && product > highestProduct) {
+				highestProduct = product
+			}
+		}
+	}
+	if (highestProduct != 0) {
+		return desc, highestProduct, time.Since(start).Seconds(), nil
+	}
+	return desc, maxNum, time.Since(start).Seconds(), errors.New("no palindrome found")
 }
