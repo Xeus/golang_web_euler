@@ -108,7 +108,7 @@ func Problem4(maxNum int64) (string, int64, float64, error) {
 	// error checking
 	if maxNum < 0 {
 		return desc, maxNum, time.Since(start).Seconds(), errors.New("negative number")
-	} else if maxNum < 10 {
+	} else if maxNum <= 10 {
 		return desc, maxNum, time.Since(start).Seconds(), errors.New("number is too low")
 	}
 
