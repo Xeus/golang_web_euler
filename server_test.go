@@ -131,7 +131,7 @@ func Test_Problem4(t *testing.T) {
 	assert.PositiveLen(desc)
 	assert.Equal(906609, solution)
 	assert.Equal(true, since >= 0)
-	assert.Equal("high: 999, low: 900", extraInfo)
+	assert.Equal("num1: 993, num2: 913", extraInfo)
 
 	desc, solution, since, extraInfo, err = euler.Problem4(99)
 	assert.Equal(9009, solution)

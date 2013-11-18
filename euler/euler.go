@@ -102,8 +102,9 @@ func isPalindrome(product int64) (bool) {
 // once the first palindrome is found (probably as the second term i),
 // then we can assume no other product components will be lower than
 // that number so we can reduce the number of tuples needed to be checked
-func findPalindrome(high int64, low int64) (int64, int64) {
+func findPalindrome(high int64, low int64) (int64, int64, string) {
 	var product, firstLow int64
+	var extraInfo string = ""
 	var highestProduct int64 = 0
 	firstLow = 0
 	for h := high; h >= low; h-- {
@@ -117,6 +118,7 @@ func findPalindrome(high int64, low int64) (int64, int64) {
 
 			if (isPalindrome(product) == true && product > highestProduct) {
 				highestProduct = product
+				extraInfo = fmt.Sprintf("num1: %d, num2: %d", h, i)
 				if (h < i) {
 					low = h
 					if firstLow == 0 {
@@ -131,7 +133,7 @@ func findPalindrome(high int64, low int64) (int64, int64) {
 			}
 		}
 	}
-	return highestProduct, firstLow
+	return highestProduct, firstLow, extraInfo
 }
 
 func Problem4(maxNum int64) (string, int64, float64, string, error) {
@@ -151,13 +153,13 @@ func Problem4(maxNum int64) (string, int64, float64, string, error) {
 	var high, low, i int64
 	var step float64
 	var firstLow int64 = 0
+	var extraInfo string = ""
 	step = 0.1
 	high = maxNum
 	low = maxNum - int64(math.Floor(float64(maxNum) * step))
 	for i = 1; high > firstLow; i++ {
-		highestProduct, firstLow = findPalindrome(high, low)
+		highestProduct, firstLow, extraInfo = findPalindrome(high, low)
 		if (highestProduct != 0) {
-			extraInfo := fmt.Sprintf("high: %d, low: %d", high, low)
 			return desc, highestProduct, time.Since(start).Seconds(), extraInfo, nil
 		}
 		high = low
