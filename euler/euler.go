@@ -6,7 +6,7 @@
 package euler
 
 import (
- 	// "fmt"
+ 	"fmt"
  	"strconv"
  	"time"
  	"errors"
@@ -99,35 +99,69 @@ func isPalindrome(product int64) (bool) {
 	return true
 }
 
-func Problem4(maxNum int64) (string, int64, float64, error) {
-	var product int64
+// once the first palindrome is found (probably as the second term i),
+// then we can assume no other product components will be lower than
+// that number so we can reduce the number of tuples needed to be checked
+func findPalindrome(high int64, low int64) (int64, int64) {
+	var product, firstLow int64
 	var highestProduct int64 = 0
-	
+	firstLow = 0
+	for h := high; h >= low; h-- {
+		for i := high; i >= low; i-- {
+			product = h * i
+
+			// don't bother if product is lower than the highest palindrome found
+			if product < highestProduct {
+				break
+			}
+
+			if (isPalindrome(product) == true && product > highestProduct) {
+				highestProduct = product
+				if (h < i) {
+					low = h
+					if firstLow == 0 {
+						firstLow = h
+					}
+				} else {
+					low = i
+					if firstLow == 0 {
+						firstLow = i
+					}
+				}
+			}
+		}
+	}
+	return highestProduct, firstLow
+}
+
+func Problem4(maxNum int64) (string, int64, float64, string, error) {
 	var desc string = "largest palindrome of product of 2 3-digit numbers"
 	start := time.Now()
 
 	// error checking
 	if maxNum < 0 {
-		return desc, maxNum, time.Since(start).Seconds(), errors.New("negative number")
+		return desc, maxNum, time.Since(start).Seconds(), "", errors.New("negative number")
 	} else if maxNum <= 10 {
-		return desc, maxNum, time.Since(start).Seconds(), errors.New("number is too low")
+		return desc, maxNum, time.Since(start).Seconds(), "", errors.New("number is too low")
 	} else if maxNum > 9999999 {
-		return desc, maxNum, time.Since(start).Seconds(), errors.New("number will take too long to compute")
+		return desc, maxNum, time.Since(start).Seconds(), "", errors.New("number will take too long to compute")
 	}
 
-	for h := maxNum; h >= 0; h-- {
-		for i := maxNum; i >= 0; i-- {
-			product = h * i
-			if product < highestProduct {
-				break
-			}
-			if (isPalindrome(product) == true && product > highestProduct) {
-				highestProduct = product
-			}
+	var highestProduct int64 = 0
+	var high, low, i int64
+	var step float64
+	var firstLow int64 = 0
+	step = 0.1
+	high = maxNum
+	low = maxNum - int64(math.Floor(float64(maxNum) * step))
+	for i = 1; high > firstLow; i++ {
+		highestProduct, firstLow = findPalindrome(high, low)
+		if (highestProduct != 0) {
+			extraInfo := fmt.Sprintf("high: %d, low: %d", high, low)
+			return desc, highestProduct, time.Since(start).Seconds(), extraInfo, nil
 		}
+		high = low
+		low = int64(math.Floor(float64(maxNum) * float64(i) * step))
 	}
-	if (highestProduct != 0) {
-		return desc, highestProduct, time.Since(start).Seconds(), nil
-	}
-	return desc, maxNum, time.Since(start).Seconds(), errors.New("no palindrome found")
+	return desc, maxNum, time.Since(start).Seconds(), "", errors.New("no palindrome found")
 }

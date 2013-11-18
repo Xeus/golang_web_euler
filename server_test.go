@@ -127,20 +127,24 @@ func Test_Problem3(t *testing.T) {
 func Test_Problem4(t *testing.T) {
 	assert := assrt.NewAssert(t)
 
-	var desc, solution, since, err = euler.Problem4(euler.ProblemDefaults()[4])
+	var desc, solution, since, extraInfo, err = euler.Problem4(euler.ProblemDefaults()[4])
 	assert.PositiveLen(desc)
 	assert.Equal(906609, solution)
 	assert.Equal(true, since >= 0)
+	assert.Equal("high: 999, low: 900", extraInfo)
 
-	desc, solution, since, err = euler.Problem4(99)
+	desc, solution, since, extraInfo, err = euler.Problem4(99)
 	assert.Equal(9009, solution)
 
-	desc, solution, since, err = euler.Problem4(-10)
+	desc, solution, since, extraInfo, err = euler.Problem4(11)
+	assert.Equal(121, solution)
+
+	desc, solution, since, extraInfo, err = euler.Problem4(-10)
 	assert.NotNil(err)
 
-	desc, solution, since, err = euler.Problem4(10)
+	desc, solution, since, extraInfo, err = euler.Problem4(10)
 	assert.NotNil(err)
 
-	desc, solution, since, err = euler.Problem4(10000000)
+	desc, solution, since, extraInfo, err = euler.Problem4(10000000)
 	assert.NotNil(err)
 }

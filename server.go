@@ -127,6 +127,7 @@ type EulerResult struct {
 	MaxNum int64 `json:"max_num"`
 	Result int64 `json:"result"`
 	Duration string `json:"duration"`
+	ExtraInfo string `json:"extra_info"`
 	ErrorMsg string `json:"error_msg"`
 }
 
@@ -154,7 +155,7 @@ func getMaxNum(url []string, defaultVal int64) (maxNum int64, err error) {
 }
 
 func eulerHandler(w http.ResponseWriter, r *http.Request) {
-	var desc string
+	var desc, extraInfo string
 	var result, maxNum int64
 	var err error
 	var since float64
@@ -191,7 +192,7 @@ func eulerHandler(w http.ResponseWriter, r *http.Request) {
 		desc, result, since, err = euler.Problem3(maxNum)
 		break
 	case 4:
-		desc, result, since, err = euler.Problem4(maxNum)
+		desc, result, since, extraInfo, err = euler.Problem4(maxNum)
 		break
 	default:
 		http.NotFound(w, r)
@@ -200,13 +201,13 @@ func eulerHandler(w http.ResponseWriter, r *http.Request) {
 
 	sinceStr := strconv.FormatFloat(since, 'f', 2, 64) + "s"
 
-	var msg string
+	var errMsg string
 	if err == nil {
-		msg = ""
+		errMsg = ""
 	} else {
-		msg = err.Error()
+		errMsg = err.Error()
 	}
-	eulerResult := EulerResult{problemNum, desc, maxNum, result, sinceStr, msg}
+	eulerResult := EulerResult{problemNum, desc, maxNum, result, sinceStr, extraInfo, errMsg}
 	
 	answer, err := json.Marshal(eulerResult)  // convert slice to json
 	if err != nil {
